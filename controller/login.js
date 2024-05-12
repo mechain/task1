@@ -55,7 +55,7 @@ const loginController = async (req, res) => {
       .status(StatusCodes.OK)
       .json(
         new ApiResponse(
-          token,
+          { token, isAdmin: false },
           "You are logged in successfully!!!",
           StatusCodes.OK,
           true

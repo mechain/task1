@@ -26,7 +26,6 @@ const jwtAuth = async (req, res, next) => {
           )
         );
     }
-    console.log(result,'=====')
     req.body.email = result.email;
     req.body.password = result.password;
   });
@@ -35,7 +34,6 @@ const jwtAuth = async (req, res, next) => {
 
 const adminAuth = async (req, res, next) => {
   const { email } = req.body;
-  console.log(email);
   const adminUser = await User.findOne({ email });
   if (!adminUser) {
     return res

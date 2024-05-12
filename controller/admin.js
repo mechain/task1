@@ -2,6 +2,8 @@ const { StatusCodes } = require("http-status-codes");
 const User = require("../models/user.model");
 const ApiResponse = require("../helpers/apiResponse");
 const { default: mongoose } = require("mongoose");
+const bcrypt = require('bcryptjs');
+const generateToken = require("../helpers/generateToken");
 
 const adminController = {
   signUp: async (req, res) => {
@@ -25,8 +27,8 @@ const adminController = {
         password: hashPassword,
         phone,
         isAdmin: true,
-        userListing: "pending",
-        accountStatus: "pending",
+        userListing: "approved",
+        accountStatus: "active",
       });
 
       return res
@@ -93,7 +95,7 @@ const adminController = {
 
     try {
       const payload = {
-        email: userInfo.password,
+        email: userInfo.email,
         password: userInfo.password,
       };
 
@@ -103,7 +105,7 @@ const adminController = {
         .status(StatusCodes.OK)
         .json(
           new ApiResponse(
-            token,
+            { token, isAdmin: true },
             "You are logged in successfully!!!",
             StatusCodes.OK,
             true
@@ -126,7 +128,7 @@ const adminController = {
 
 const getUserList = async (req, res) => {
   try {
-    const userList = await User.find({ isAdmin: false });
+    const userList = await User.find({ isAdmin: false }, { email: 1, firstname: 1, lastname: 1, accountStatus: 1, userListing: 1 });
     return res
       .status(StatusCodes.OK)
       .json(new ApiResponse(userList, "User List", StatusCodes.OK, true));

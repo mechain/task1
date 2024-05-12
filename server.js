@@ -3,14 +3,16 @@ const express = require("express");
 const connectToDB = require("./models/connectToDb");
 const route = require("./routes/index");
 const errorHandler = require("./helpers/errorhandler");
-const { jwtAuth, adminAuth } = require("./helpers/jwtAuth");
-const Warehouse = require("./models/warehouse.model");
-const User = require("./models/user.model");
 const mailToAdmin = require("./helpers/mail");
-
+const cors = require('cors')
+const bodyParser = require('body-parser')
 const app = express();
-
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }))
+
+app.use(cors({
+  origin: "*"
+}))
 
 route(app);
 
